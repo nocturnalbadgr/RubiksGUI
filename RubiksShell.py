@@ -309,7 +309,7 @@ Currently only the top face is calibrated to make the entire face from variables
     def reset(self):
         """Resets the cube to a solved state"""
         self.my_cube.reset()
-        print('NEXT TIME, SOLVE IT LIKE A MAN.')
+        print('DONT CHEAT NEXT TIME')
         self.recolor_faces()
 
     def scramble(self):
