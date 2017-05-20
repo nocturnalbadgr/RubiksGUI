@@ -1,10 +1,12 @@
 from Cube import *
 from tkinter import *
+from os import system
+from platform import system as platform
 
 class RubiksShell(Frame):
     """This is a class meant to display a GUI for the Rubiks class"""
 
-    animationDelay = 200
+    ANIMATION_DELAY = 200
 
     def __init__(self, parent):
         Frame.__init__(self, parent)
@@ -187,7 +189,7 @@ Currently only the top face is calibrated to make the entire face from variables
         self.moveStack = self.moveStack[1:]
         self.recolor_faces()
 
-        self.master.after(RubiksShell.animationDelay, self.animate_movestack)
+        self.master.after(RubiksShell.ANIMATION_DELAY, self.animate_movestack)
 
 
     def draw_top_square(self, x_origin, y_origin, side_length, face, slot, outline='black', fill='white', width=1):
@@ -233,16 +235,13 @@ Currently only the top face is calibrated to make the entire face from variables
     def onKeyPress(self, event):
         if event.char == 't':
             self.show_alg_execution("R U R' U' R' F R2 U' R' U' R U R' F'")
-        # if event.char == 'u':
-        #     if self.my_cube.is_solved() == True:
-        #         print("THE CUBE IS SOLVED")
-        #         self.stop_timer()
-        #     else:
-        #         print("THE CUBE IS NOT YET SOLVED")
+
 
 if __name__ == '__main__':
     window = Tk()
     shell = RubiksShell(window)
-    #shell.cube.execute_algorithm("R U R' U' R' F R2 U' R' U' R U R' F'")
     shell.recolor_faces()
+    # Bring app into focus (on osx)
+    if platform() == 'Darwin':  # How Mac OS X is identified by Python
+        system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "Python" to true' ''')
     window.mainloop()
