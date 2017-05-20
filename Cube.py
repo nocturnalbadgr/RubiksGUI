@@ -69,9 +69,9 @@ class Cube(object):
                       'M': 'g', 'N': 'g', 'O': 'g', 'P': 'g',
                       'Q': 'o', 'R': 'o', 'S': 'o', 'T': 'o',
                       'U': 'w', 'V': 'w', 'W': 'w', 'X': 'w'}
-        self.getFaces()
+        self.get_faces()
 
-    def rotateMove(self, cycleList, inverse=False):
+    def rotate_move(self, cycleList, inverse=False):
         for cycle in cycleList:
             if inverse:
                 newOrder = cycle[1:] + [cycle[0]]
@@ -82,9 +82,9 @@ class Cube(object):
                 newValues.append(self.state[loc])
             for i in range(4):
                 self.state[cycle[i]] = newValues[i]
-        self.getFaces()
+        self.get_faces()
 
-    def getFaces(self):
+    def get_faces(self):
         '''Here we are bridging between two systems: The speffz mapping in this class and the face-wise matrix in the display class.'''
         for face in range(6):
             self.faces[face] = []
@@ -93,3 +93,31 @@ class Cube(object):
                 if len(self.faces[face]) == 4:
                     self.faces[face].append(Cube.centers[face])  # Add the centers which are static (and always index 4)
         return self.faces
+
+    def execute_move(self, move):
+        if "'" in move:
+            inverse = True
+        else:
+            inverse = False
+
+        if move[0] == 'U':
+            cycle = self.UCycle
+        elif move[0] == 'L':
+            cycle = self.LCycle
+        elif move[0] == 'F':
+            cycle = self.FCycle
+        elif move[0] == 'R':
+            cycle = self.RCycle
+        elif move[0] == 'B':
+            cycle = self.BCycle
+        elif move[0] == 'D':
+            cycle = self.DCycle
+
+        self.rotate_move(cycle, inverse)
+        if '2' in move:
+            self.rotate_move(cycle, inverse)
+
+    def execute_algorithm(self, alg):
+        moves = alg.split(' ')
+        for move in moves:
+            self.execute_move(move)
