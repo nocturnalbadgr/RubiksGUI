@@ -124,3 +124,11 @@ class Cube(object):
         moves = alg.split(' ')
         for move in moves:
             self.execute_move(move)
+        self.print_cube_state()
+
+    def print_cube_state(self):
+        faces = self.moveStack[-1]
+        for face in faces:
+            print(face[0] + face[1] + face[2])
+            print(face[3] + face[4] + face[5])
+            print(face[6] + face[7] + face[8] + "\n")

@@ -3,10 +3,10 @@ from tkinter import *
 from os import system
 from platform import system as platform
 
-class RubiksShell(Frame):
+class CubeViewer(Frame):
     """This is a class meant to display a GUI for the Rubiks class"""
 
-    ANIMATION_DELAY = 200
+    ANIMATION_DELAY = 100
 
     def __init__(self, parent, cube=Cube()):
         Frame.__init__(self, parent)
@@ -122,7 +122,7 @@ class RubiksShell(Frame):
         self.recolor_faces(self.cube.moveStack[0])
         self.cube.moveStack = self.cube.moveStack[1:]
 
-        self.master.after(RubiksShell.ANIMATION_DELAY, self.animate_movestack)
+        self.master.after(CubeViewer.ANIMATION_DELAY, self.animate_movestack)
 
     def recolor_faces(self, faces):
         """Recolor the faces of the rubik's cube. Color the visual representation"""
@@ -150,7 +150,7 @@ class RubiksShell(Frame):
 
 if __name__ == '__main__':
     window = Tk()
-    shell = RubiksShell(window, Cube())
+    shell = CubeViewer(window, Cube())
 
     # Bring app into focus (on osx)
     if platform() == 'Darwin':  # How Mac OS X is identified by Python
