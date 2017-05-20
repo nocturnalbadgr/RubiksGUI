@@ -1,9 +1,11 @@
-import Cube
+from Cube import *
 from tkinter import *
-
 
 class RubiksShell(Frame):
     """This is a class meant to display a GUI for the Rubiks class"""
+
+    animationDelay = 200
+
     def __init__(self, parent):
         Frame.__init__(self, parent)
         # Create Canvas, store canvas items
@@ -43,10 +45,12 @@ class RubiksShell(Frame):
         bottom_face_ccw.pack(side=LEFT)
         row_two.pack(side=TOP)
 
+        self.moveStack = []
+
         # Draw the cube
         self.draw_cube(400, 75, 60, 8)
         # creates a model to store its cube data
-        self.cube = Cube.Cube()
+        self.cube = Cube()
         # correctly colors the faces on the drawn cube according to cube data
         self.recolor_faces()
         # handles key presses for manual button input
@@ -123,52 +127,67 @@ Currently only the top face is calibrated to make the entire face from variables
         self.draw_top_square(x_origin-(side_width*1.73+space_width)/2, y_origin+(space_width+side_width)*3/2, side_width, 5, 1)
 
     def top_turn(self):
-         self.cube.rotate_move(Cube.Cube.UCycle)
+         self.cube.rotate_move(Cube.UCycle)
          self.recolor_faces()
 
     def front_turn(self):
-        self.cube.rotate_move(Cube.Cube.FCycle)
+        self.cube.rotate_move(Cube.FCycle)
         self.recolor_faces()
 
     def right_turn(self):
-        self.cube.rotate_move(Cube.Cube.RCycle)
+        self.cube.rotate_move(Cube.RCycle)
         self.recolor_faces()
 
     def left_turn(self):
-        self.cube.rotate_move(Cube.Cube.LCycle)
+        self.cube.rotate_move(Cube.LCycle)
         self.recolor_faces()
 
     def back_turn(self):
-        self.cube.rotate_move(Cube.Cube.BCycle)
+        self.cube.rotate_move(Cube.BCycle)
         self.recolor_faces()
 
     def bottom_turn(self):
-        self.cube.rotate_move(Cube.Cube.DCycle)
+        self.cube.rotate_move(Cube.DCycle)
         self.recolor_faces()
 
     def top_turn_ccw(self):
-        self.cube.rotate_move(Cube.Cube.UCycle, inverse=True)
+        self.cube.rotate_move(Cube.UCycle, inverse=True)
         self.recolor_faces()
 
     def front_turn_ccw(self):
-        self.cube.rotate_move(Cube.Cube.FCycle, inverse=True)
+        self.cube.rotate_move(Cube.FCycle, inverse=True)
         self.recolor_faces()
 
     def right_turn_ccw(self):
-        self.cube.rotate_move(Cube.Cube.RCycle, inverse=True)
+        self.cube.rotate_move(Cube.RCycle, inverse=True)
         self.recolor_faces()
 
     def left_turn_ccw(self):
-        self.cube.rotate_move(Cube.Cube.LCycle, inverse=True)
+        self.cube.rotate_move(Cube.LCycle, inverse=True)
         self.recolor_faces()
 
     def back_turn_ccw(self):
-        self.cube.rotate_move(Cube.Cube.BCycle, inverse=True)
+        self.cube.rotate_move(Cube.BCycle, inverse=True)
         self.recolor_faces()
 
     def bottom_turn_ccw(self):
-        self.cube.rotate_move(Cube.Cube.DCycle, inverse=True)
+        self.cube.rotate_move(Cube.DCycle, inverse=True)
         self.recolor_faces()
+
+    def show_alg_execution(self, alg):
+        moves = alg.split(' ')
+        self.moveStack = moves
+        self.animate_movestack()
+
+
+    def animate_movestack(self):
+        if not self.moveStack:
+            return
+        self.cube.execute_move(self.moveStack[0])
+        self.moveStack = self.moveStack[1:]
+        self.recolor_faces()
+
+        self.master.after(RubiksShell.animationDelay, self.animate_movestack)
 
 
     def draw_top_square(self, x_origin, y_origin, side_length, face, slot, outline='black', fill='white', width=1):
@@ -212,7 +231,8 @@ Currently only the top face is calibrated to make the entire face from variables
                 self.canvas.itemconfig(self.canvas_items[face][slot], fill=color)
 
     def onKeyPress(self, event):
-        pass
+        if event.char == 't':
+            self.show_alg_execution("R U R' U' R' F R2 U' R' U' R U R' F'")
         # if event.char == 'u':
         #     if self.my_cube.is_solved() == True:
         #         print("THE CUBE IS SOLVED")
@@ -223,6 +243,6 @@ Currently only the top face is calibrated to make the entire face from variables
 if __name__ == '__main__':
     window = Tk()
     shell = RubiksShell(window)
-    shell.cube.execute_algorithm("R U R' U' R' F R2 U' R' U' R U R' F'")
+    #shell.cube.execute_algorithm("R U R' U' R' F R2 U' R' U' R U R' F'")
     shell.recolor_faces()
     window.mainloop()
