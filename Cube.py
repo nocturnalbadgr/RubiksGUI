@@ -12,8 +12,7 @@ class Cube(object):
     UCycle = [['a', 'b', 'c', 'd'],  # These are the edges ON the face being turned
               ['q', 'm', 'i', 'e'],  # These are the four other edges affected by the face
               ['A', 'B', 'C', 'D'],  # These are the corners ON the face being turned
-              ['Q', 'M', 'I', 'E'],
-              # These are 4 of the eight corners affected but not on the face. Note that their addresses are the same as their related edges
+              ['Q', 'M', 'I', 'E'],  # These are 4 of the eight corners affected but not on the face. Note that their addresses are the same as their related edges
               ['R', 'N', 'J', 'F']]  # The remaining affected corners
 
     LCycle = [['e', 'f', 'g', 'h'],
@@ -52,6 +51,7 @@ class Cube(object):
                ['E', 'e', 'F', 'h', 'f', 'H', 'g', 'G'],
                ['Q', 'q', 'R', 't', 'r', 'T', 's', 'S'],
                ['U', 'u', 'V', 'x', 'v', 'X', 'w', 'W']]
+
     faces = [[], [], [], [], [], []]
 
     centers = ['y', 'r', 'g', 'b', 'o', 'w']
