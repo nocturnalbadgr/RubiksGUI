@@ -1,3 +1,5 @@
+import threading
+
 class Cube(object):
     # Speffz notation; edges are lower case, corners are capital.
     # https://www.speedsolving.com/wiki/index.php/Speffz
@@ -45,6 +47,19 @@ class Cube(object):
               ['K', 'O', 'S', 'G'],
               ['L', 'P', 'T', 'H']]
 
+    SOLVED_STATE = {'a': 'y', 'b': 'y', 'c': 'y', 'd': 'y',
+                    'e': 'b', 'f': 'b', 'g': 'b', 'h': 'b',
+                    'i': 'r', 'j': 'r', 'k': 'r', 'l': 'r',
+                    'm': 'g', 'n': 'g', 'o': 'g', 'p': 'g',
+                    'q': 'o', 'r': 'o', 's': 'o', 't': 'o',
+                    'u': 'w', 'v': 'w', 'w': 'w', 'x': 'w',
+                    'A': 'y', 'B': 'y', 'C': 'y', 'D': 'y',
+                    'E': 'b', 'F': 'b', 'G': 'b', 'H': 'b',
+                    'I': 'r', 'J': 'r', 'K': 'r', 'L': 'r',
+                    'M': 'g', 'N': 'g', 'O': 'g', 'P': 'g',
+                    'Q': 'o', 'R': 'o', 'S': 'o', 'T': 'o',
+                    'U': 'w', 'V': 'w', 'W': 'w', 'X': 'w'}
+
     faceMap = [['A', 'a', 'B', 'd', 'b', 'D', 'c', 'C'],
                ['I', 'i', 'J', 'l', 'j', 'L', 'k', 'K'],
                ['M', 'm', 'N', 'p', 'n', 'P', 'o', 'O'],
@@ -55,18 +70,8 @@ class Cube(object):
     centers = ['y', 'r', 'g', 'b', 'o', 'w']
 
     def __init__(self):
-        self.state = {'a': 'y', 'b': 'y', 'c': 'y', 'd': 'y',
-                      'e': 'b', 'f': 'b', 'g': 'b', 'h': 'b',
-                      'i': 'r', 'j': 'r', 'k': 'r', 'l': 'r',
-                      'm': 'g', 'n': 'g', 'o': 'g', 'p': 'g',
-                      'q': 'o', 'r': 'o', 's': 'o', 't': 'o',
-                      'u': 'w', 'v': 'w', 'w': 'w', 'x': 'w',
-                      'A': 'y', 'B': 'y', 'C': 'y', 'D': 'y',
-                      'E': 'b', 'F': 'b', 'G': 'b', 'H': 'b',
-                      'I': 'r', 'J': 'r', 'K': 'r', 'L': 'r',
-                      'M': 'g', 'N': 'g', 'O': 'g', 'P': 'g',
-                      'Q': 'o', 'R': 'o', 'S': 'o', 'T': 'o',
-                      'U': 'w', 'V': 'w', 'W': 'w', 'X': 'w'}
+        self.stackLock = threading.Lock()
+        self.state = dict(Cube.SOLVED_STATE)
         self.moveStack = []
         self.get_faces()
 
@@ -92,10 +97,14 @@ class Cube(object):
                 faces[face].append(self.state[sticker])
                 if len(faces[face]) == 4:
                     faces[face].append(Cube.centers[face])  # Add the centers which are static (and always index 4)
-        self.moveStack.append(faces[:])
+        with self.stackLock:
+            self.moveStack.append(faces[:])
         return faces
 
     def execute_move(self, move):
+        if not move:
+            return False
+
         if "'" in move:
             inverse = True
         else:
@@ -124,10 +133,19 @@ class Cube(object):
         moves = alg.split(' ')
         for move in moves:
             self.execute_move(move)
-        self.print_cube_state()
+
+
+    def reset(self):
+        with self.stackLock:
+            self.moveStack = []
+        self.state = Cube.SOLVED_STATE
+        self.get_faces()
 
     def print_cube_state(self):
-        faces = self.moveStack[-1]
+        with self.stackLock:
+            if not self.moveStack:
+                return False
+            faces = self.moveStack[-1]
         for face in faces:
             print(face[0] + face[1] + face[2])
             print(face[3] + face[4] + face[5])

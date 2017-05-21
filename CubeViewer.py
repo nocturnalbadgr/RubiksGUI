@@ -1,14 +1,12 @@
 from Cube import *
 from tkinter import *
-from os import system
-from platform import system as platform
 
 class CubeViewer(Frame):
     """This is a class meant to display a GUI for the Rubiks class"""
 
     ANIMATION_DELAY = 100
 
-    def __init__(self, parent, cube=Cube()):
+    def __init__(self, parent=Tk(), cube=Cube()):
         Frame.__init__(self, parent)
         # Create Canvas, store canvas items
         self.canvas = Canvas(parent, width=800, height=650)
@@ -22,8 +20,6 @@ class CubeViewer(Frame):
         self.cube = cube
         # correctly colors the faces on the drawn cube according to cube data
         self.recolor_faces(cube.moveStack[0])
-        # handles key presses for manual button input
-        parent.bind('<KeyPress>', self.onKeyPress)
 
     def draw_cube(self, x_origin, y_origin, side_width, space_width):
         """Draws a visual representation of a rubik's cube. Currently only the top face is calibrated to make the entire face from variables"""
@@ -120,7 +116,8 @@ class CubeViewer(Frame):
         if not self.cube.moveStack:
             return
         self.recolor_faces(self.cube.moveStack[0])
-        self.cube.moveStack = self.cube.moveStack[1:]
+        with self.cube.stackLock:
+            self.cube.moveStack = self.cube.moveStack[1:]
 
         self.master.after(CubeViewer.ANIMATION_DELAY, self.animate_movestack)
 
@@ -140,19 +137,3 @@ class CubeViewer(Frame):
                 elif faces[face][slot] == 'y':
                     color = 'yellow'
                 self.canvas.itemconfig(self.canvas_items[face][slot], fill=color)
-
-    def onKeyPress(self, event):
-        pass
-        if event.char == 't':
-            self.cube.execute_algorithm("R U R' U' R' F R2 U' R' U' R U R' F'")
-            self.animate_movestack()
-
-
-if __name__ == '__main__':
-    window = Tk()
-    shell = CubeViewer(window, Cube())
-
-    # Bring app into focus (on osx)
-    if platform() == 'Darwin':  # How Mac OS X is identified by Python
-        system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "Python" to true' ''')
-    window.mainloop()
