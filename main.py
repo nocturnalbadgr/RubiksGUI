@@ -6,7 +6,6 @@ from platform import system as platform
 cube = Cube()
 view = CubeViewer(cube=cube)
 
-stack_lock = threading.Lock()
 
 class InputListener(threading.Thread):
     def run(self):

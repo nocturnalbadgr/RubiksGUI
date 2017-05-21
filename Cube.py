@@ -69,9 +69,9 @@ class Cube(object):
 
     centers = ['y', 'r', 'g', 'b', 'o', 'w']
 
-    def __init__(self):
+    def __init__(self, initialState=dict(SOLVED_STATE)):
         self.stackLock = threading.Lock()
-        self.state = dict(Cube.SOLVED_STATE)
+        self.state = initialState
         self.moveStack = []
         self.get_faces()
 
