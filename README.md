@@ -1,20 +1,18 @@
 # RubiksGUI
-A Rubiks Cube, implemented in tkinter and operational via button input~~ or key
-press.~~
+A Rubiks Cube model with tkinter-based display. Able to execute moves and algorithms given through the console.
 
 ### Usage
-- Run `RubiksShell.py` somewhere with tkinter installed, like in IDLE
+- Run `main.py` somewhere with tkinter installed, like in IDLE
 
 ### Features
 - Completely accurate, solvable Rubiks Cuble
-~~- Single-key commands for clockwise rotation on each face~~
-~~- Shift modifier for counterclockwise rotation on each face~~
-~~- Scramble/reset/timer features to track improvements in speed~~
+- Executes complex algorithms or single moves
 
 ### What it does
-~~- Manipulates the ThreeCube class defined in `Rubiks.py`~~
+- Manipulates virtual cube based on moves enterered in command line
 - Uses tkinter to draw, color, and recolor polygons on the Tkinter canvas
+- Moves are executed instantly but animated with a delay
 
 ### What it doesn't do
-~~- N/A~~
-- Lots
+- Make pancakes
+- Solve itself (yet)
